@@ -1,5 +1,6 @@
 package com.example.moviecat
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -7,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecat.Data.DataClassItem
 import com.example.moviecat.databinding.ItemsBinding
 
-class myAdapter(val list: ArrayList<DataClassItem>) :RecyclerView.Adapter<myAdapter.myViewHolder> () {
+class myAdapter(var con : Context, val list: List<DataClassItem>?) :RecyclerView.Adapter<myAdapter.myViewHolder> () {
 
    inner class myViewHolder(val itemViewBinding : ItemsBinding ):RecyclerView.ViewHolder(itemViewBinding.root) {
 
+       var textID = itemViewBinding.itemId
+       var textTitle = itemViewBinding.title
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
@@ -18,13 +21,13 @@ class myAdapter(val list: ArrayList<DataClassItem>) :RecyclerView.Adapter<myAdap
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return list!!.count()
     }
 
     override fun onBindViewHolder(holder: myViewHolder, position: Int) {
 
-        holder.itemViewBinding.title.text = list[position].toString()
-        holder.itemViewBinding.itemId.text = list[position].toString()
+        holder.textID.text = list!![position]?.id.toString()
+        holder.textTitle.text = list!![position]?.title
     }
 
 

@@ -2,8 +2,9 @@ package com.example.moviecat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecat.Data.DataClassItem
 import com.example.moviecat.Repo.url_apiInterface
 import com.example.moviecat.databinding.ActivityMainBinding
@@ -19,16 +20,19 @@ const val base_url = "https://jsonplaceholder.typicode.com/"
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var adapter: myAdapter
-    lateinit var list: ArrayList<DataClassItem>
+    lateinit var recyVieww : RecyclerView
     lateinit var linearLayoutManager: LinearLayoutManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.recyclerciew.setHasFixedSize(true)
+        recyVieww = binding.recyclerciew
+        recyVieww.setHasFixedSize(true)
+        binding.recyclerciew.adapter
         linearLayoutManager = LinearLayoutManager(this)
         binding.recyclerciew.layoutManager = linearLayoutManager
+
 // calling the method for getting data
         getApiData()
     }
@@ -50,11 +54,13 @@ class MainActivity : AppCompatActivity() {
                 response: Response<List<DataClassItem>?>
             ) {
 
-              //  val responsebody = response.body()
-                adapter = myAdapter(list)
-                adapter.notifyDataSetChanged()
-                binding.recyclerciew.adapter = adapter
+               val responsebody = response.body()!!
 
+                adapter = myAdapter(baseContext,responsebody)
+                adapter.notifyDataSetChanged()
+                recyVieww.adapter = adapter
+
+                Log.d("data",responsebody.toString())
             }
 
             override fun onFailure(call: Call<List<DataClassItem>?>, t: Throwable) {
